@@ -9,36 +9,72 @@
 </head>
 <body>
 
-    <header>
-        <h1>Just a Todo List</h1>
-    </header>
-    <form>
-        <div class='todo-input-div'>
-            <input type='text' class='todo-input' placeholder="Name">
-            <input type="date" class='todo-date-input'>
-            <select name='priority' class='priority-select'>
-                <option value="🔼Normal">🔼 Normal</option>
-                <option value='🔺High'>🔺 High</option>
-            </select>
-            <button class='todo-button' type='submit'>
-                <span>+</span>
-            </button>
+    
+    <div id='content'>
+
+        <div id='tab-area'>
+            <h3>Select Tab</h3>
+            <div class='folder-area-div'>
+                <ul class='tab-list'>
+
+                    <li class='tab'>
+                        <div class='tab-div'>
+                            <span>Test Folder</span>
+                        </div>
+                    </li>
+                    <li class='tab'>
+                        <div class='tab-div'>
+                            <span>Test Folder</span>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+            <div class='add-tab-button-div'>
+                <button class='tab-button' type='submit'>
+                    <span> + Add New Tab</span>
+                </button>
+            </div>            
         </div>
 
-        <div class='select'>
-            <select name='todos' class='filter-todo'>
-                <option value="all">All</option>
-                <option value="completed">Completed</option>
-                <option value="uncompleted">Uncompleted</option>
-            </select>
-        </div>        
-    </form>
 
-    
+        <div>
+            <header>
+                <h1>Just Todo it!</h1>
+            </header>
+            <form>
+                <div class='todo-input-div'>
+                    <input type='text' class='todo-input' placeholder="Name">
+                    <input type="date" class='todo-date-input'>
+                    <select name='priority' class='priority-select'>
+                        <option value="🔼Normal">🔼 Normal</option>
+                        <option value='🔺High'>🔺 High</option>
+                    </select>
+                    <button class='todo-button' type='submit'>
+                        <span>+</span>
+                    </button>
+                </div>
+        
+                <div class='select'>
+                    <select name='todos' class='filter-todo'>
+                        <option value="all">All</option>
+                        <option value="completed">Completed</option>
+                        <option value="uncompleted">Uncompleted</option>
+                    </select>
+                </div>        
+            </form>
+        
+            <div class='todo-container'>
+                <ul class='todo-list'></ul>
+            </div>            
+        </div>
 
-    <div class='todo-container'>
-        <ul class='todo-list'></ul>
+        
+
+
     </div>
+    
     
     <script src="./app.js"></script>
 </body>
