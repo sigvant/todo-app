@@ -1,7 +1,8 @@
-function Todo(name, date, priority) {
+function Todo(name, date, priority, status) {
     this.name = name
     this.date = date
     this.priority = priority
+    this.status = status;
 }
 
 //selectors
@@ -34,6 +35,7 @@ function addTodo(event) {
     let priority = todoPriorityInput.value;
     let newtodoobj = new Todo(name, date, priority);
 
+
     const newTodo = document.createElement('li');
     newTodo.classList.add('todo-item');
 
@@ -58,7 +60,7 @@ function addTodo(event) {
 
 
     // add todo to the local storage
-    saveLocalTodos(todoInput.value);
+    saveLocalTodos(newtodoobj);
     // CHECK MARK button
 
     const completedButton = document.createElement('button');
@@ -78,11 +80,11 @@ function addTodo(event) {
     // clear todo input value
     todoInput.value = '';
     todoDateInput.value = '';
-    todoPriorityInput.value = '';
 }
 
 function deleteCheck(event) {
     const item = event.target;
+    
     // delete todo
     if(item.classList[0] === 'trash-btn') {
         const todo = item.parentElement;
@@ -151,22 +153,50 @@ function getTodos() {
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
         // create LI
+
+        // todo object instantiation
+
+        let name = todo.name;
+        let date = todo.date;
+        let priority = todo.priority;        
+
         const newTodo = document.createElement('li');
-        newTodo.textContent = todo;
         newTodo.classList.add('todo-item');
-        todoDiv.appendChild(newTodo);    
-        // CHECK MARK button
+
+        const newTodoNameDiv = document.createElement('div');
+        newTodoNameDiv.textContent = name;
+        newTodoNameDiv.classList.add('todo-info-boxes')
+
+        const newTodoDateDiv = document.createElement('div');
+        newTodoDateDiv.textContent = date;
+        newTodoDateDiv.classList.add('todo-info-boxes')
+
+        const newTodoPriorityDiv = document.createElement('div');
+        newTodoPriorityDiv.textContent = priority;
+        newTodoPriorityDiv.classList.add('todo-info-boxes')
+        
+        
+        newTodo.appendChild(newTodoNameDiv);
+        newTodo.appendChild(newTodoDateDiv);
+        newTodo.appendChild(newTodoPriorityDiv);
+
+        todoDiv.appendChild(newTodo);
+
         const completedButton = document.createElement('button');
         completedButton.textContent = '✔️';
         completedButton.classList.add('complete-btn');
         todoDiv.appendChild(completedButton);
+        
         // trash MARK button
+
         const trashButton = document.createElement('button');
         trashButton.textContent = '🗑️';
         trashButton.classList.add('trash-btn');
         todoDiv.appendChild(trashButton);
+
         // append to list
         todoList.appendChild(todoDiv);
+            
     })
 }
 
