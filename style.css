@@ -103,6 +103,7 @@ form button:hover {
 }
 
 .todo-item {
+    display: flex;
     padding: 0rem 0.5rem;
 }
 
@@ -157,4 +158,9 @@ select {
     width: 32%;
     font-size: 1rem;
     color: black;
+}
+
+.todo-info-boxes {
+    /* border: 1px solid black; */
+    margin: 0.5rem;
 }
