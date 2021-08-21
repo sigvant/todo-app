@@ -20,7 +20,9 @@ const filterOption = document.querySelector('.filter-todo');
 
 //selectors tab area
 const addTabButton = document.querySelector('.tab-button');
-const TabList = document.querySelector('.tab-list') 
+const TabList = document.querySelector('.tab-list');
+const tab = document.querySelectorAll('.tab');
+
 
 //event listeners
 document.addEventListener('DOMContentLoaded', getTodos);
@@ -28,8 +30,7 @@ todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
 addTabButton.addEventListener('click', createTab);
-TabList.addEventListener('click', deleteTab);
-
+TabList.addEventListener('click', deleteSelectTab);
 
 //functions
 function addTodo(event) {
@@ -150,7 +151,9 @@ function saveLocalTodos(todo) {
         todos = JSON.parse(localStorage.getItem('todos'));
     }
     todos.push(todo);
+
     localStorage.setItem('todos', JSON.stringify(todos));
+    
 }
 
 function getTodos() {
@@ -271,3 +274,42 @@ function deleteTab(event) {
         });
     }
 }
+
+function deleteSelectTab(event) { 
+    
+    const item = event.target;
+    
+    
+    // delete todo
+    if(item.classList[0] === 'trash-btn') {
+        const todo = item.parentElement.parentElement;
+        // animation
+        todo.classList.add('fall');
+        removeLocalTodos(todo);
+        todo.addEventListener('transitionend', () => {
+            todo.remove();
+        });
+    }
+
+    // check mark
+
+    if(item.classList[0] === 'tab-div' || item.classList[0] === 'tab') {
+        let tab = document.querySelectorAll('.tab');
+        if(event.target.classList.contains('tab')) {
+            tab.forEach(item => item.classList.remove('active'));
+            item.classList.add('active');
+        }
+        
+    }
+}
+
+// function loadTodos() {
+//     let todos;
+//     if(localStorage.getItem('todos') === null) {
+//         todos = [];
+//     } else {
+//         todos = JSON.parse(localStorage.getItem('todos'));
+//     }
+    
+//     let replacedNode = todoList.replaceChildren(todos, todoList.childNodes);
+// }
