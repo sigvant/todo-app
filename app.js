@@ -253,10 +253,16 @@ function createTab(event) {
 }
 
 function deleteTab(event) {
+    
     const item = event.target;
-    console.log(item.classList[0])
+    const div = document.querySelector('.tab-list');
+           
     if(item.classList[0] === 'trash-btn') {
+        
+        if(div.childNodes.length === 4) return;
+        
         const tab = item.parentElement.parentElement;
+        
         // animation
         tab.classList.add('fall');
         
