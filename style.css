@@ -240,6 +240,7 @@ h3 {
     background-color:white;
     color: black;
     box-shadow: 0 0 2px 2px silver;
+    transition: all 0.3s ease;
 
 }
 
@@ -249,4 +250,8 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+span {
+    padding: 2rem;
 }

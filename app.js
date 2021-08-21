@@ -1,3 +1,8 @@
+function Tab(name) {
+    this.name = name;
+    this.todos = [];
+}
+
 function Todo(name, date, priority, status) {
     this.name = name
     this.date = date
@@ -5,7 +10,7 @@ function Todo(name, date, priority, status) {
     this.status = status;
 }
 
-//selectors
+//selectors main area
 const todoInput = document.querySelector('.todo-input');
 const todoDateInput = document.querySelector('.todo-date-input');
 const todoPriorityInput = document.querySelector('.priority-select')
@@ -13,11 +18,18 @@ const todoButton = document.querySelector('.todo-button');
 const todoList = document.querySelector('.todo-list');
 const filterOption = document.querySelector('.filter-todo');
 
+//selectors tab area
+const addTabButton = document.querySelector('.tab-button');
+const TabList = document.querySelector('.tab-list') 
+
 //event listeners
 document.addEventListener('DOMContentLoaded', getTodos);
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
+addTabButton.addEventListener('click', createTab);
+TabList.addEventListener('click', deleteTab);
+
 
 //functions
 function addTodo(event) {
@@ -213,4 +225,43 @@ function removeLocalTodos(todo) {
     todos.splice(todos.indexOf(todoIndex), 1);
     localStorage.setItem('todos', JSON.stringify(todos));
 
+}
+
+function createTab(event) {
+    event.preventDefault();   
+    
+    let name = prompt('Name your tab!', 'Popsicle');
+    let tab = new Tab(name);
+
+    let newTab = document.createElement('li');
+    newTab.classList.add('tab');
+    let newDiv = document.createElement('div');
+    newDiv.classList.add('tab-div');
+    let newSpan = document.createElement('span');
+    newSpan.textContent = tab.name;
+
+    let newTrashButton = document.createElement('button');
+    newTrashButton.classList.add('trash-btn');
+    newTrashButton.textContent = '🗑️';
+
+    
+    newDiv.appendChild(newSpan);
+    newDiv.appendChild(newTrashButton);
+    newTab.appendChild(newDiv);
+    TabList.appendChild(newTab);    
+
+}
+
+function deleteTab(event) {
+    const item = event.target;
+    console.log(item.classList[0])
+    if(item.classList[0] === 'trash-btn') {
+        const tab = item.parentElement.parentElement;
+        // animation
+        tab.classList.add('fall');
+        
+        tab.addEventListener('transitionend', () => {
+            tab.remove();
+        });
+    }
 }
