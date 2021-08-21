@@ -247,6 +247,9 @@ function createTab(event) {
     newTrashButton.classList.add('trash-btn');
     newTrashButton.textContent = '🗑️';
 
+
+    //save tab to local memory
+    saveLocalTab(tab);
     
     newDiv.appendChild(newSpan);
     newDiv.appendChild(newTrashButton);
@@ -293,23 +296,26 @@ function deleteSelectTab(event) {
 
     // check mark
 
-    if(item.classList[0] === 'tab-div' || item.classList[0] === 'tab') {
+    if(item.classList[0] === 'tab-div' || item.classList[0] === 'tab' || item.classList[0] === 'span-div') {
         let tab = document.querySelectorAll('.tab');
         if(event.target.classList.contains('tab')) {
-            tab.forEach(item => item.classList.remove('active'));
-            item.classList.add('active');
+            tab.forEach(item => item.classList.remove('tab-active'));
+            item.classList.add('tab-active');
         }
         
     }
 }
 
-// function loadTodos() {
-//     let todos;
-//     if(localStorage.getItem('todos') === null) {
-//         todos = [];
-//     } else {
-//         todos = JSON.parse(localStorage.getItem('todos'));
-//     }
+function saveLocalTab(tab) {
+    //check -- do I already have things in there?
+    let tabs;
+    if(localStorage.getItem('tabs') === null) {
+        tabs = [];
+    } else {
+        tabs = JSON.parse(localStorage.getItem('tabs'));
+    }
+    tabs.push(tab);
+
+    localStorage.setItem('tabs', JSON.stringify(tabs));
     
-//     let replacedNode = todoList.replaceChildren(todos, todoList.childNodes);
-// }
+}
