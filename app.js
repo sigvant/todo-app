@@ -26,6 +26,7 @@ const tab = document.querySelectorAll('.tab');
 
 //event listeners
 document.addEventListener('DOMContentLoaded', getTodos);
+document.addEventListener('DOMContentLoaded', loadTabs);
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
@@ -240,42 +241,27 @@ function createTab(event) {
     newTab.classList.add('tab');
     let newDiv = document.createElement('div');
     newDiv.classList.add('tab-div');
+    let newSpanDiv = document.createElement('div');
+    newSpanDiv.classList.add('span-div');
     let newSpan = document.createElement('span');
     newSpan.textContent = tab.name;
 
+    let newTrashcanDiv = document.createElement('div');
+    newTrashcanDiv.classList.add('trashcan-div')
     let newTrashButton = document.createElement('button');
     newTrashButton.classList.add('trash-btn');
     newTrashButton.textContent = '🗑️';
 
-
     //save tab to local memory
     saveLocalTab(tab);
     
-    newDiv.appendChild(newSpan);
-    newDiv.appendChild(newTrashButton);
+    newSpanDiv.appendChild(newSpan);
+    newDiv.appendChild(newSpanDiv);
+    newTrashcanDiv.appendChild(newTrashButton);
     newTab.appendChild(newDiv);
+    newTab.appendChild(newTrashcanDiv);
     TabList.appendChild(newTab);    
 
-}
-
-function deleteTab(event) {
-    
-    const item = event.target;
-    const div = document.querySelector('.tab-list');
-           
-    if(item.classList[0] === 'trash-btn') {
-        
-        if(div.childNodes.length === 4) return;
-        
-        const tab = item.parentElement.parentElement;
-        
-        // animation
-        tab.classList.add('fall');
-        
-        tab.addEventListener('transitionend', () => {
-            tab.remove();
-        });
-    }
 }
 
 function deleteSelectTab(event) { 
@@ -285,12 +271,12 @@ function deleteSelectTab(event) {
     
     // delete todo
     if(item.classList[0] === 'trash-btn') {
-        const todo = item.parentElement.parentElement;
+        const tab = item.parentElement.parentElement;
         // animation
-        todo.classList.add('fall');
-        removeLocalTodos(todo);
-        todo.addEventListener('transitionend', () => {
-            todo.remove();
+        tab.classList.add('fall');
+        removeLocalTab(tab);
+        tab.addEventListener('transitionend', () => {
+            tab.remove();
         });
     }
 
@@ -316,6 +302,58 @@ function saveLocalTab(tab) {
     }
     tabs.push(tab);
 
-    localStorage.setItem('tabs', JSON.stringify(tabs));
+    localStorage.setItem('tabs', JSON.stringify(tabs));   
+}
+
+function loadTabs() {
+    let tabs;
+    if(localStorage.getItem('tabs') === null) {
+        tabs = [];
+    } else {
+        tabs = JSON.parse(localStorage.getItem('tabs'));
+    }
+    tabs.forEach(function(tab){
+        let name = tab.name;
+        console.log(name);
     
+        let newTab = document.createElement('li');
+        newTab.classList.add('tab');
+        let newDiv = document.createElement('div');
+        newDiv.classList.add('tab-div');
+        let newSpanDiv = document.createElement('div');
+        newSpanDiv.classList.add('span-div');
+        let newSpan = document.createElement('span');
+        newSpan.textContent = name;
+    
+        let newTrashcanDiv = document.createElement('div');
+        newTrashcanDiv.classList.add('trashcan-div')
+        let newTrashButton = document.createElement('button');
+        newTrashButton.classList.add('trash-btn');
+        newTrashButton.textContent = '🗑️';
+        
+        newSpanDiv.appendChild(newSpan);
+        newDiv.appendChild(newSpanDiv);
+        newTrashcanDiv.appendChild(newTrashButton);
+        newTab.appendChild(newDiv);
+        newTab.appendChild(newTrashcanDiv);
+        TabList.appendChild(newTab);   
+    })
+}
+
+function removeLocalTab(tab) {
+    let tabs;
+    if(localStorage.getItem('tabs') === null) {
+        tabs = [];
+    } else {
+        tabs = JSON.parse(localStorage.getItem('tabs'));
+    }
+    // what I click is the div, now I want the li and the inner text
+    // so we can SPLICE it
+    console.log(tab)
+    const tabIndex = tab.children[0].innerText;
+    console.log(tabIndex)
+    console.log(tabs)
+    tabs.splice(tabs.indexOf(tabIndex), 1);
+    localStorage.setItem('tabs', JSON.stringify(tabs));
+
 }
