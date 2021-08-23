@@ -181,7 +181,9 @@ select {
     color: black;
 }
 
-.todo-info-boxes {
+.todo-info-boxes-name,
+.todo-info-boxes-date,
+.todo-info-boxes-priority {
     /* border: 1px solid black; */
     margin: 0.5rem;
 }

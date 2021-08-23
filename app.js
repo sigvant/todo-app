@@ -27,6 +27,7 @@ const tab = document.querySelectorAll('.tab');
 //event listeners
 document.addEventListener('DOMContentLoaded', getTodos);
 document.addEventListener('DOMContentLoaded', loadTabs);
+document.addEventListener('DOMContentLoaded', activateTab);
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
@@ -55,15 +56,15 @@ function addTodo(event) {
 
     const newTodoNameDiv = document.createElement('div');
     newTodoNameDiv.textContent = name;
-    newTodoNameDiv.classList.add('todo-info-boxes')
+    newTodoNameDiv.classList.add('todo-info-boxes-name')
 
     const newTodoDateDiv = document.createElement('div');
     newTodoDateDiv.textContent = date;
-    newTodoDateDiv.classList.add('todo-info-boxes')
+    newTodoDateDiv.classList.add('todo-info-boxes-date')
 
     const newTodoPriorityDiv = document.createElement('div');
     newTodoPriorityDiv.textContent = priority;
-    newTodoPriorityDiv.classList.add('todo-info-boxes')
+    newTodoPriorityDiv.classList.add('todo-info-boxes-priority')
     
     
     newTodo.appendChild(newTodoNameDiv);
@@ -76,6 +77,9 @@ function addTodo(event) {
     // add todo to the local storage
     saveLocalTodos(newtodoobj);
     // CHECK MARK button
+
+    //put todo in the active tab
+    saveTodosinTab(newtodoobj);
 
     const completedButton = document.createElement('button');
     completedButton.textContent = '✔️';
@@ -96,6 +100,21 @@ function addTodo(event) {
     todoDateInput.value = '';
 }
 
+function saveTodosinTab(todo) {
+    const activeTab = document.querySelector('.tab-active');
+    const tabName = activeTab.childNodes[0].innerText;
+    if(localStorage.getItem('tabs') === null) return;
+    else {
+        tabs = JSON.parse(localStorage.getItem('tabs'));
+    }    
+    tabs.forEach(tab => {
+        if(tab.name == tabName) {
+            tab.todos.push(todo);
+            localStorage.setItem('tabs', JSON.stringify(tabs));
+        }
+    })
+}
+
 function deleteCheck(event) {
     const item = event.target;
     
@@ -104,7 +123,7 @@ function deleteCheck(event) {
         const todo = item.parentElement;
         // animation
         todo.classList.add('fall');
-        removeLocalTodos(todo);
+        removeLocalTodos();
         todo.addEventListener('transitionend', () => {
             todo.remove();
         });
@@ -181,15 +200,15 @@ function getTodos() {
 
         const newTodoNameDiv = document.createElement('div');
         newTodoNameDiv.textContent = name;
-        newTodoNameDiv.classList.add('todo-info-boxes')
+        newTodoNameDiv.classList.add('todo-info-boxes-name')
 
         const newTodoDateDiv = document.createElement('div');
         newTodoDateDiv.textContent = date;
-        newTodoDateDiv.classList.add('todo-info-boxes')
+        newTodoDateDiv.classList.add('todo-info-boxes-date')
 
         const newTodoPriorityDiv = document.createElement('div');
         newTodoPriorityDiv.textContent = priority;
-        newTodoPriorityDiv.classList.add('todo-info-boxes')
+        newTodoPriorityDiv.classList.add('todo-info-boxes-priority')
         
         
         newTodo.appendChild(newTodoNameDiv);
@@ -216,18 +235,32 @@ function getTodos() {
     })
 }
 
-function removeLocalTodos(todo) {
+function removeLocalTodos() {
     let todos;
     if(localStorage.getItem('todos') === null) {
         todos = [];
     } else {
         todos = JSON.parse(localStorage.getItem('todos'));
     }
+    
     // what I click is the div, now I want the li and the inner text
     // so we can SPLICE it
-    const todoIndex = todo.children[0].innerText;
-    todos.splice(todos.indexOf(todoIndex), 1);
+    const todoForTab = document.querySelector('.todo-info-boxes-name').innerText;
+    
+    todos = todos.filter(item => item.name != todoForTab );
+
+    // todos.splice(todos.indexOf(todoForTab), 1);
     localStorage.setItem('todos', JSON.stringify(todos));
+
+    if(localStorage.getItem('tabs') === null) return;
+    else {
+        tabs = JSON.parse(localStorage.getItem('tabs'));
+    }      
+    tabs.forEach(item => {
+        item.todos = item.todos.filter(item => item.name != todoForTab);
+    })
+    localStorage.setItem('tabs', JSON.stringify(tabs));
+
 
 }
 
@@ -260,7 +293,9 @@ function createTab(event) {
     newTrashcanDiv.appendChild(newTrashButton);
     newTab.appendChild(newDiv);
     newTab.appendChild(newTrashcanDiv);
-    TabList.appendChild(newTab);    
+    TabList.appendChild(newTab);   
+    
+    activateTab();
 
 }
 
@@ -287,6 +322,7 @@ function deleteSelectTab(event) {
         if(event.target.classList.contains('tab')) {
             tab.forEach(item => item.classList.remove('tab-active'));
             item.classList.add('tab-active');
+            
         }
         
     }
@@ -314,8 +350,7 @@ function loadTabs() {
     }
     tabs.forEach(function(tab){
         let name = tab.name;
-        console.log(name);
-    
+        
         let newTab = document.createElement('li');
         newTab.classList.add('tab');
         let newDiv = document.createElement('div');
@@ -349,11 +384,16 @@ function removeLocalTab(tab) {
     }
     // what I click is the div, now I want the li and the inner text
     // so we can SPLICE it
-    console.log(tab)
     const tabIndex = tab.children[0].innerText;
-    console.log(tabIndex)
-    console.log(tabs)
     tabs.splice(tabs.indexOf(tabIndex), 1);
     localStorage.setItem('tabs', JSON.stringify(tabs));
 
+}
+
+function activateTab() {
+    
+    if(TabList.childNodes[0] === undefined) return;
+    else {
+        TabList.childNodes[0].classList.add('tab-active');    
+    }
 }
