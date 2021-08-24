@@ -373,7 +373,6 @@ function getTodayDate() {
     }        
     let year = today.getFullYear();
     let todayDate = (`${year}-${month}-${day}`);
-    console.log(todayDate);
 
     let dateInput = document.querySelector('.todo-date-input');
     dateInput.setAttribute('min', todayDate);
